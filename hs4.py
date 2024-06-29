@@ -60,6 +60,8 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
     """
     
     
+    # print(prompt)
+
     print(message)
 
     response = client.chat.completions.create(
