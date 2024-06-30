@@ -34,8 +34,11 @@ hs_examples_dict = [
     {'example input':'“Kept being called a "Jew" for no reason.”; "A player on the other team was named Hitler.” “[One player] threatened to get antisemitic if I didnt talk. [They] talked about Jew tunnels.”',
      'example output':['hate speech','race', 1]},
     {'example input':'if money was grown on trees women would be dating monkeys oh wait never mind',
-     'example output':['hate speech','sex', 1]}
+     'example output':['hate speech','sex', 1]},
+    {'example input':'well my dear lgbtq brothers and sisters i do not want to die at the hands of a muslim terrorist and as you are putting my life in danger with your politics i would like to suggest that you all go fuck yourselves',
+     'example output':['hate speech',['gender identity', 'sexual orientation', 'religion'], 1]}
 ]
+
 
 hs_examples_str = '\n'
 for ind in range(len(hs_examples_dict)):
