@@ -59,14 +59,15 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
 
     prompt = f"""Consider the following definition: '{HS_definition}'. 
 
-    Classify the following fragment from a chat as hate speech or not hate speech, with respect to one of the following protected characteristics: '{protected_characteristics_str}'.
+    INSTRUCTION: 
+    Classify the following fragment from a chat as either hate speech with respect to one or more of protected characteristics from the following list: '{protected_characteristics_str}', or not hate speech with respect to the protected characteristics from the following list: '{protected_characteristics_str}'.
     
     OUTPUT:
     The output should only contain 3 elements: 
     1) "hate speech" or "not hate speech", 
     2) one or more protected characteristic labels from the list: '{protected_characteristics_str}', 
     3) the probability with two decimal points.
-    
+
     EXAMPLES:
     Consider the following examples:'{examples}'.
     
