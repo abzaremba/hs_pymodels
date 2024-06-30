@@ -31,6 +31,8 @@ hs_examples_dict = [
      'example output':['hate speech','sexual orientation', 1]},
     {'example input':'Aspie my ass. too slow to remember, so dont waste our time playing',
      'example output':['hate speech','neurotype', 1]},
+    {'example input':'everybody has adhd these day. youre just a lazy retard who cant pay attention for a moment',
+     'example output':['hate speech','neurotype', 1]},
     {'example input':'“Kept being called a "Jew" for no reason.”; "A player on the other team was named Hitler.” “[One player] threatened to get antisemitic if I didnt talk. [They] talked about Jew tunnels.”',
      'example output':['hate speech','race', 1]}
 ]
@@ -44,12 +46,18 @@ test_texts = [
     "You f**king evil pieces of s**t @china",
     "You're kind of a dick, aren't you?",
     "If you have a d then you can't be a woman!",
-    "Fuck that! So now we have to explain to you, remember for you? Should we also play for you?",
+    # "Fuck that! So now we have to explain to you, remember for you? Should we also play for you?",
+    # "Don't play like a little girl",
+    # "Don't be a pansy",
+    # "U suck n*****r",
+    "U suck aspie",
+    # "Don't fucking show up here! SQUIRREL!",
+    # "Don't fucking show up here!",
     "a woman shall not wear man's clothing, nor shall a man put on a woman's clothing; for whoever does these things is an abomination to the LORD your God.",
     "Seriously, Blake? Brace yourself for the beta uprising, femoid.",
     "You mean who the real bitches are? Haha!",
     "Haha, right on! Let's fuck them up!",
-    "Fluke my ass, you're just a klutz!"
+    "Fluke my ass, you’re just a klutz!"
 ]
 
 
@@ -61,10 +69,15 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
     Consider the following examples:'{examples}'.
     Classify the following fragment from a chat as hate speech or not hate speech, with respect to one of the following protected characteristics: '{protected_characteristics_str}'.
     Message: '{message}'.
-    The output should only contain 3 elements: "hate speech" or "not hate speech", protected characteristic label, and the probability with two decimal points.
+    The output should only contain 3 elements: 
+    1) "hate speech" or "not hate speech", 
+    2) one or more protected characteristic labels from '{protected_characteristics_str}', 
+    3) the probability with two decimal points.
     """
     
     
+    # print(prompt)
+
     print(message)
 
     response = client.chat.completions.create(
