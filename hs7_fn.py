@@ -13,8 +13,7 @@ client = OpenAI(
 # remember about the different endpoints!!!
 
 protected_characteristics = [
-    'race', 'religion', 'ethnic origin', 'national origin', 'sex', 'disability', 'sexual orientation', 'gender identity', 
-    # 'body size'
+    'race', 'religion', 'ethnic origin', 'national origin', 'sex', 'disability', 'sexual orientation', 'gender identity', 'neurotype', 'body size'
 ]
 
 
@@ -60,9 +59,46 @@ test_texts = [
 ]
 
 
+chain_of_thought_dict = [
+    {"example input":"There are Jews and Muslims here",
+     "example output":['not hate speech','', 1],
+     "explanation":"This is a statement naming people's religions. It is neutral in tone, regadless if it's factually correct or not. So it is not hate speech"},
+    {"example input":"There are Jews and Muslims here. Let's watch as they k*ll each other.",
+     "example output":['hate speech','religion', 1],
+     "explanation":"A neutral statement naming people's religions is followed by an implied suggestion that having those religious beliefs will cause people to fight each other. So it is hate speech"},
+    {"example input":"You're saying you're a Sikh? I say turban wearing bin laden",
+     "example output":['hate speech','religion', 1],
+     "explanation":"Person's religion (Sikhism) is devalued and their religious clothing (turban) is compared to a symbol of terrorism - Osama bin Laned. So it is hate speech"},
+     {"example input":"Queers are welcome here",
+     "example output":['not hate speech',['sexual orientation','gender identity'], 1],
+     "explanation":"Statement implies inclusion and acceptance. So it is not hate speech"},
+     {"example input":"All those alphabet people should f**k off from here and stop grooming children",
+     "example output":['hate speech',['sexual orientation','gender identity'], 1],
+     "explanation":"'alphabet people' is a slang term referring to LGBTQ+ community and is used in a hostile context. Suggestion about hurt children is used to incite hatred against LGBTQ+ people. So it is hate speech"},
+]
 
-def classify_hs(message:str, protected_characteristics_str:str, HS_definition:str, examples:str):
+
+chain_ot_str = '\n'
+for ind in range(len(chain_of_thought_dict)):
+  chain_ot_str += "\n" + str(chain_of_thought_dict[ind])[1:-1]
+
+
+def classify_hs(message:str, protected_characteristics_str:str, HS_definition:str, examples:str, chain_ot:str, verbose=False, extra_notes=""):
     
+    if examples==[]:
+       examples_section = ""
+    else:
+       examples_section = f"""
+    EXAMPLES:
+    Consider the following examples:'{examples}'"""
+       
+    if chain_ot==[]:
+       chain_ot_section = ""
+    else:
+       chain_ot_section = f"""
+    CHAIN-OF-THOUGHT:
+    Consider the following chain-of-thought:'{chain_ot}'"""
+
 
     prompt = f"""
     DEFINITIONS:
@@ -70,7 +106,8 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
 
     INSTRUCTION: 
     Using the provided definition of hate speech, classify the following fragment from a chat as either hate speech with respect to one or more of protected characteristics from the following list: '{protected_characteristics_str}', or not hate speech with respect to the protected characteristics from the following list: '{protected_characteristics_str}'.
-    
+    '{extra_notes}'
+
     OUTPUT:
     The output should only contain 3 elements: 
     1) "hate speech" or "not hate speech", 
@@ -80,8 +117,8 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
     OUTPUT FORMAT:
     ['hate speech', 'sexual orientation', 0.98]
 
-    EXAMPLES:
-    Consider the following examples:'{examples}'.
+    '{examples_section}'
+    '{chain_ot_section}'
     
     MESSAGE:
     '{message}'. 
@@ -92,8 +129,8 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
     # 'hate speech', 'religion', 0.98
 
 
-    
-    print(prompt)
+    if verbose:
+       print(prompt)
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -107,10 +144,10 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
 
 # response = completion["choices"][0]["text"].strip()
 
-for text in test_texts:
-    print("=============================")
-    print(classify_hs(
-            message = text, 
-            protected_characteristics_str = ", ".join(protected_characteristics), 
-            HS_definition=HS_definition, 
-            examples=hs_examples_str))
+# for text in test_texts:
+#     print("=============================")
+#     print(classify_hs(
+#             message = text, 
+#             protected_characteristics_str = ", ".join(protected_characteristics), 
+#             HS_definition=HS_definition, 
+#             examples=hs_examples_str))

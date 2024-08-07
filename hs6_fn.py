@@ -13,8 +13,7 @@ client = OpenAI(
 # remember about the different endpoints!!!
 
 protected_characteristics = [
-    'race', 'religion', 'ethnic origin', 'national origin', 'sex', 'disability', 'sexual orientation', 'gender identity', 
-    # 'body size'
+    'race', 'religion', 'ethnic origin', 'national origin', 'sex', 'disability', 'sexual orientation', 'gender identity', 'neurotype', 'body size'
 ]
 
 
@@ -61,7 +60,7 @@ test_texts = [
 
 
 
-def classify_hs(message:str, protected_characteristics_str:str, HS_definition:str, examples:str):
+def classify_hs(message:str, protected_characteristics_str:str, HS_definition:str, examples:str, verbose=False):
     
 
     prompt = f"""
@@ -92,8 +91,8 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
     # 'hate speech', 'religion', 0.98
 
 
-    
-    print(prompt)
+    if verbose:
+       print(message)
 
     response = client.chat.completions.create(
     model="gpt-3.5-turbo",
@@ -107,10 +106,10 @@ def classify_hs(message:str, protected_characteristics_str:str, HS_definition:st
 
 # response = completion["choices"][0]["text"].strip()
 
-for text in test_texts:
-    print("=============================")
-    print(classify_hs(
-            message = text, 
-            protected_characteristics_str = ", ".join(protected_characteristics), 
-            HS_definition=HS_definition, 
-            examples=hs_examples_str))
+# for text in test_texts:
+#     print("=============================")
+#     print(classify_hs(
+#             message = text, 
+#             protected_characteristics_str = ", ".join(protected_characteristics), 
+#             HS_definition=HS_definition, 
+#             examples=hs_examples_str))
